@@ -7,7 +7,7 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 from sklearn.model_selection import train_test_split
 
-model = pickle.load(open('model.pkl','rb'))
+model = pickle.load(open('../model/model.pkl','rb'))
 
 def tfconverter(x,xtrain,xvalid):
   tfv = TfidfVectorizer(min_df=3,  max_features=None,
@@ -18,8 +18,8 @@ def tfconverter(x,xtrain,xvalid):
 
   return tfv.transform(x)
 
-df = pd.read_csv('dataframe.csv')
-y = pd.read_csv('target.csv')
+df = pd.read_csv('../processed_data/dataframe.csv')
+y = pd.read_csv('../processed_data/target.csv')
 
 xtrain,xvalid,ytrain,yvalid= train_test_split(df.text.values,y,stratify=y,random_state=42,test_size=0.1,shuffle=True)
 

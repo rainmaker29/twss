@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from flask import Flask, request, jsonify, render_template
 import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -7,10 +8,10 @@ from sklearn.model_selection import train_test_split
 
 
 app = Flask(__name__)
-model = pickle.load(open('model.pkl', 'rb'))
+model = pickle.load(open('model/model.pkl', 'rb'))
 
-df = pd.read_csv('/processed_data/dataframe.csv')
-y = pd.read_csv('/processed_data/target.csv')
+df = pd.read_csv('processed_data/dataframe.csv')
+y = pd.read_csv('processed_data/target.csv')
 
 xtrain,xvalid,ytrain,yvalid= train_test_split(df.text.values,y,stratify=y,random_state=42,test_size=0.1,shuffle=True)
 
@@ -40,7 +41,8 @@ def predict():
 
 
 
-    text = [x for x in requrest.form.values()]
+    text = [str(x) for x in request.form.values()]
+    text = text[0]
 
     text = tfconverter([text],xtrain,xvalid)
 

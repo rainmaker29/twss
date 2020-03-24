@@ -21,10 +21,10 @@ from sklearn.svm import SVC
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 import nltk
-nltk.download()
+# nltk.download()
 
-from google.colab import drive
-drive.mount('/content/drive')
+# from google.colab import drive
+# drive.mount('/content/drive')
 
 fml = pd.read_csv('drive/My Drive/twss/fml.txt',sep="\n",header=None)
 fml.columns=['text']
@@ -74,13 +74,13 @@ xtrain,xvalid,ytrain,yvalid= train_test_split(df.text.values,y,stratify=y,random
 
 print(xtrain.shape,xvalid.shape)
 
-tfv = TfidfVectorizer(min_df=3,  max_features=None, 
+tfv = TfidfVectorizer(min_df=3,  max_features=None,
             strip_accents='unicode', analyzer='word',token_pattern=r'\w{1,}',
             ngram_range=(1, 3), use_idf=1,smooth_idf=1,sublinear_tf=1,
             stop_words = 'english')
 
 tfv.fit(list(xtrain) + list(xvalid))
-xtrain_tfv =  tfv.transform(xtrain) 
+xtrain_tfv =  tfv.transform(xtrain)
 xvalid_tfv = tfv.transform(xvalid)
 
 clf = LogisticRegression(C=1.0)
@@ -133,7 +133,7 @@ mll_scorer = metrics.make_scorer(metrics.accuracy_score, greater_is_better=True,
 
 nb_model = MultinomialNB()
 
-# Create the pipeline 
+# Create the pipeline
 clf = pipeline.Pipeline([('nb', nb_model)])
 
 # parameter grid
@@ -144,7 +144,7 @@ model = GridSearchCV(estimator=clf, param_grid=param_grid, scoring=mll_scorer,
                                  verbose=10, n_jobs=-1, iid=True, refit=True, cv=2)
 
 # Fit Grid Search Model
-model.fit(xtrain_tfv, ytrain)  # we can use the full data here but im only using xtrain. 
+model.fit(xtrain_tfv, ytrain)  # we can use the full data here but im only using xtrain.
 print("Best score: %0.3f" % model.best_score_)
 print("Best parameters set:")
 best_parameters = model.best_estimator_.get_params()
@@ -158,7 +158,7 @@ predictions = clf.predict(xvalid_tfv)
 print(metrics.accuracy_score(predictions,yvalid))
 
 def tfconverter(x):
-  tfv = TfidfVectorizer(min_df=3,  max_features=None, 
+  tfv = TfidfVectorizer(min_df=3,  max_features=None,
             strip_accents='unicode', analyzer='word',token_pattern=r'\w{1,}',
             ngram_range=(1, 3), use_idf=1,smooth_idf=1,sublinear_tf=1,
             stop_words = 'english')
@@ -176,7 +176,7 @@ if res == np.array([0]):
 else:
   print("That's what she said")
 
-clf
+# clf
 
 import pickle
 pickle.dump(clf,open('model.pkl','wb'))
@@ -185,4 +185,3 @@ model = pickle.load(open('model.pkl','rb'))
 
 x = tfconverter([input()])
 model.predict(x)
-
